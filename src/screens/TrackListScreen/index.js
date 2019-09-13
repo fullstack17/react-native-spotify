@@ -11,23 +11,35 @@ class TrackListScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tracks: []
+      tracks: [],
+      fetching: false,
+      noMore: false
     }
     this.offset = 0;
   }
 
   componentDidMount() {
-    this.onInitial();
+    this.fetchData();
   }
 
-  onInitial = async () => {
+  fetchData = async () => {
     const playlistID = this.props.navigation.state.params.playlistID;
+    this.setState({ fetching: true });
     const res = await getTracksAPI(playlistID, this.offset);
+    this.setState({ fetching: false });
     if (res.success) {
       if (res.result.next) {
         this.offset += 10;
+      } else {
+        this.setState({ noMore: true });
       }
-      this.setState({ tracks: res.result.items });
+      this.setState({ tracks: [...this.state.tracks, ...res.result.items] });
+    }
+  }
+
+  onEndReached = () => {
+    if (!this.state.fetching && this.state.tracks.length !== 0 && !this.state.noMore) {
+      this.fetchData();
     }
   }
 
@@ -96,6 +108,7 @@ class TrackListScreen extends Component {
           keyExtractor={(item, index) => `index-${index}`}
           ItemSeparatorComponent={this.renderSeparator}
           style={styles.tracks}
+          onEndReached={this.onEndReached}
         />
       </SafeAreaView>
     );
