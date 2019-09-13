@@ -32,6 +32,13 @@
     "react-test-renderer": "16.8.6"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "automock": false,
+    "setupFiles": [
+      "./jest/setup.js"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!react-native|native-base|react-navigation)"
+    ]
   }
 }
