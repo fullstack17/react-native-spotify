@@ -39,6 +39,10 @@
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!react-native|native-base|react-navigation)"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^image![a-zA-Z0-9$_-]+$": "GlobalImageStub",
+      "^[@./a-zA-Z0-9$_-]+\\.(png|gif)$": "RelativeImageStub"
+    }
   }
 }
